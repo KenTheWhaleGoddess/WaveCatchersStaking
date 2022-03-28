@@ -140,7 +140,7 @@ contract Coco is ERC20Burnable, Ownable, IERC721Receiver {
         proxy = _address;
     }
 
-    function addLockupPeriods(uint16[] memory inDays, uint16[] memory emissions) external onlyOwner {
+    function addLockupPeriods(uint16[] memory inDays, uint256[] memory emissions) external onlyOwner {
         for(uint256 i = 0; i < inDays.length; i++) {
             //unchecked: add to set
             validLockupPeriodsDays[inDays[i]] = emissions[i];
