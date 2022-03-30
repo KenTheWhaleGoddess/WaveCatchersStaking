@@ -23,7 +23,6 @@ contract Coco is ERC20Burnable, Ownable, IERC721Receiver {
     address public waveCatchers;
     address public cocov1;
     address public marketplace;
-    address public proxy;
 
     mapping(uint16 => uint256) validLockupPeriodsDays;
 
@@ -163,10 +162,6 @@ contract Coco is ERC20Burnable, Ownable, IERC721Receiver {
     function setMarketplace(address _address) external onlyOwner {
         marketplace = _address;
     }
-    function setProxy(address _address) external onlyOwner {
-        proxy = _address;
-    }
-
     function addLockupPeriods(uint16[] memory inDays, uint256[] memory emissions) external onlyOwner {
         for(uint256 i = 0; i < inDays.length; i++) {
             //unchecked: add to set
