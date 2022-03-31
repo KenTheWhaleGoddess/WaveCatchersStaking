@@ -105,7 +105,7 @@ contract Coco is ERC20Burnable, Ownable, IERC721Receiver {
             uint16 tokenId = _tokenIds[i];
             require(block.timestamp > stakeDatas[tokenId].unlockedTime, "Token not unlocked yet");
             stakes[_user].remove(tokenId);
-            tokenToLastClaimedPassive[tokenId] = 0; //do this to prevent double counting
+            tokenToLastClaimedPassive[tokenId] = block.timestamp; //do this to prevent double counting
             ERC721(waveCatchers).safeTransferFrom(address(this), _user, tokenId);
         }
     }
