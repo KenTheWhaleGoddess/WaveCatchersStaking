@@ -70,7 +70,7 @@ contract Coco is ERC20Burnable, IERC721Receiver {
         for (uint i = 0; i < _tokenIds.length; i++) {
             uint16 tokenId = _tokenIds[i];
             require(
-                ERC721(0x8039C87E4F5417c467e81974E90d55A40A6877E8).ownerOf(tokenId) == _user,
+                ERC721(waveCatchers).ownerOf(tokenId) == _user,
                 "You are not the owner of this token"
             );
 
