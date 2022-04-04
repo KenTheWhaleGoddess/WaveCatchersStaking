@@ -10,5 +10,6 @@ Upgradeable COCO (Final address for COCO!!) - 0x0Df016Fb18ef4195b2CF9d8623E23627
 - Transparent Upgradeable  Proxy https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies
 - 
 
-#A note on TUPs
+# A note on TUPs
+
 Important note https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#storage-collisions-between-implementation-versions
