@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
@@ -15,20 +14,32 @@ import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 //  \/         \/            \/    
 // @author WG <https://twitter.com/whalegoddess>   
 
-contract Coco is ERC20Burnable, Ownable, IERC721Receiver {
+contract Coco is ERC20Burnable, IERC721Receiver {
     using EnumerableSet for EnumerableSet.UintSet;
 
     uint256 public EMISSION_RATE = 1157407407407407;
-    uint256 public immutable EMISSION_START_TIMESTAMP;
+    uint256 public EMISSION_START_TIMESTAMP;
+
+    address public implementation;
+    address public admin; 
     address public waveCatchers;
     address public cocov1;
     address public marketplace;
+
+    string _name;
+    string _symbol;
 
     mapping(uint16 => uint256) validLockupPeriodsDays;
 
     struct StakeData {
         uint256 unlockedTime;
         uint256 emission;
+    }
+
+    modifier onlyOwner() {
+        //wg/dev or set owner only 
+        require(msg.sender == 0x1B3FEA07590E63Ce68Cb21951f3C133a35032473 || (admin != address(0) && msg.sender == admin), "not admin");
+        _;
     }
 
     mapping(address => EnumerableSet.UintSet) stakes;
@@ -49,7 +60,7 @@ contract Coco is ERC20Burnable, Ownable, IERC721Receiver {
     }
 
     function ownerMint(address _user, uint256 amount) external onlyOwner {
-        _mint(_user, amount);
+        _mint(_user, amount); 
     }
 
     function claimPassiveYield(address _user, uint16[] memory _tokenIds) public {
@@ -59,7 +70,7 @@ contract Coco is ERC20Burnable, Ownable, IERC721Receiver {
         for (uint i = 0; i < _tokenIds.length; i++) {
             uint16 tokenId = _tokenIds[i];
             require(
-                ERC721(waveCatchers).ownerOf(tokenId) == _user,
+                ERC721(0x8039C87E4F5417c467e81974E90d55A40A6877E8).ownerOf(tokenId) == _user,
                 "You are not the owner of this token"
             );
 
@@ -159,8 +170,19 @@ contract Coco is ERC20Burnable, Ownable, IERC721Receiver {
     function setCocoV1Address(address _address) external onlyOwner {
         cocov1 = _address;
     }
+    function setAdmin(address _address) external onlyOwner {
+        admin = _address;
+    }
     function setMarketplace(address _address) external onlyOwner {
         marketplace = _address;
+    }
+    function setNameAndSymbol(string memory n, string memory s) external onlyOwner {
+        _name = n;
+        _symbol = s;
+    }
+    function setEmissionStart(uint256 emission_rate, uint256 start) external onlyOwner {
+        EMISSION_RATE = emission_rate;
+        EMISSION_START_TIMESTAMP = start;
     }
     function addLockupPeriods(uint16[] memory inDays, uint256[] memory emissions) external onlyOwner {
         for(uint256 i = 0; i < inDays.length; i++) {
@@ -168,7 +190,12 @@ contract Coco is ERC20Burnable, Ownable, IERC721Receiver {
             validLockupPeriodsDays[inDays[i]] = emissions[i];
         }
     }
-
+    function name() public view override returns (string memory) {
+        return _name;
+    }
+    function symbol() public view override returns (string memory) {
+        return _symbol;
+    }
      function onERC721Received(
          address,
          address,
