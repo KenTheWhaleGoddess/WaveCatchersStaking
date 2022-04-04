@@ -12,4 +12,4 @@ Deployed at
 
 # A note on TUPs
 
-Important note https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#storage-collisions-between-implementation-versions
+Dev note https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#storage-collisions-between-implementation-versions
